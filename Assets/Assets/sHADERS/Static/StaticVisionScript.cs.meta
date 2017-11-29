@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 2597caa2a108adc4d9a817dde80662a0
+timeCreated: 1511954923
+licenseType: Free
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - nightVisionShader: {fileID: 4800000, guid: 51d428bc21ce6b44896b8dfe9f0eb857, type: 3}
+  - sonarShader: {fileID: 4800000, guid: 3b867a66518baa04bacc7b93b00367de, type: 3}
+  - filmGrainShader: {fileID: 4800000, guid: 49c0e656e3576ed4c83171294a2417bd, type: 3}
+  - waveShader: {fileID: 4800000, guid: 4804b3c4ea4b8e8469b33022ad0692b6, type: 3}
+  - Movie: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
