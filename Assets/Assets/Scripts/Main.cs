@@ -17,9 +17,11 @@ namespace Quadcopter
         [Space]
         [Header("Thrusters:")]
         //[Range(0.0001f, 90.0f)]
-        public float _ThrusterSpeed = 1.0f;
-        //[Range(0.0f, 1.0f)]
+        public float _ThrusterSpeedUpwards = 1.0f;
+        public float _ThrusterSpeedDownwards = 1.0f;
+        [Range(0.0f, 1.0f)]
         public float _ThrusterTransition_Upwards = 0.2f;
+        [Range(0.0f, 1.0f)]
         public float _ThrusterTransition_Downwards = 0.1f;
         public bool _InverseThrusters = false;
         public AnalogPossibilities _ThrusterControl = AnalogPossibilities.LEFT_ANALOG_Y;
@@ -79,43 +81,43 @@ namespace Quadcopter
                 _Rotors[i].Setup(M);
             }
             return true;
-        }  
+        } 
 
-        // Get Data
-        public float GetRotorSpeed(int index)
-        {
-            return _Rotors[index].GetSpeed();
-        }
-        public float GetOverallSpeed()
-        {
-            if (_Rotors == null)
-                return 0.0f;
-
-            float total = 0.0f;
-
-            for (int i = 0; i < _Rotors.Length; i++)
-            {
-                total += GetRotorSpeed(i);
-            }
-            return total / (float)_Rotors.Length;
-        }
-        public float GetRotorSpeedRatio(int index)
-        {
-            return _Rotors[index].GetSpeedRatio();
-        }
-        public float GetOverallSpeedRatio()
-        {
-            if (_Rotors == null)
-                return 0.0f;
-
-            float total = 0.0f;
-
-            for (int i = 0; i < _Rotors.Length; i++)
-            {
-                total += GetRotorSpeedRatio(i);
-            }
-            return total / (float)_Rotors.Length;
-        }
+        //  // Get Data
+        //  public float GetRotorSpeed(int index)
+        //  {
+        //      return _Rotors[index].GetSpeed();
+        //  }
+        //  public float GetOverallSpeed()
+        //  {
+        //      if (_Rotors == null)
+        //          return 0.0f;
+        //  
+        //      float total = 0.0f;
+        //  
+        //      for (int i = 0; i < _Rotors.Length; i++)
+        //      {
+        //          total += GetRotorSpeed(i);
+        //      }
+        //      return total / (float)_Rotors.Length;
+        //  }
+        //  public float GetRotorSpeedRatio(int index)
+        //  {
+        //      return _Rotors[index].GetSpeedRatio();
+        //  }
+        //  public float GetOverallSpeedRatio()
+        //  {
+        //      if (_Rotors == null)
+        //          return 0.0f;
+        //  
+        //      float total = 0.0f;
+        //  
+        //      for (int i = 0; i < _Rotors.Length; i++)
+        //      {
+        //          total += GetRotorSpeedRatio(i);
+        //      }
+        //      return total / (float)_Rotors.Length;
+        //  }
     }
 
     // Enums
@@ -178,7 +180,7 @@ namespace Quadcopter
         {
             return eulerchanges;
         }
-        public float GetThruster()
+        public float GetThrusters()
         {
             return thrusters;
         }
@@ -249,91 +251,121 @@ namespace Quadcopter
 
             return (_Rigidbody != null);
         }
-    
+        public void SetVelocity(Vector3 v)
+        {
+            _Rigidbody.velocity = v;
+        }
+
+        // Position
+        private Vector3 Position = Vector3.zero;
+        public void UpdatePosition()
+        {
+            Position = _Rigidbody.transform.position;
+        }
+
+        // Quadcopter Axis
+        private Vector3 Quadcopter_Up = Vector3.zero;
+        private Vector3 Quadcopter_Right = Vector3.zero;
+        private Vector3 Quadcopter_Forward = Vector3.zero;
+        public void UpdateAxis()
+        {
+            Quadcopter_Up = _Rigidbody.gameObject.transform.up.normalized;
+            Quadcopter_Right = _Rigidbody.gameObject.transform.right.normalized;
+            Quadcopter_Forward = _Rigidbody.gameObject.transform.forward.normalized;
+
+            // If close enough to be up, stay up
+            if (Vector3.Distance(Quadcopter_Up, Vector3.up) < 0.1f)
+                Quadcopter_Up = Vector3.up;
+        }
+
         // Speed
-        float Speed = 0.0f;
+        private float Speed_Current = 0.0f;
+        private float Speed_Current_Ratio = 0.0f;
+        public float GetCurrentSpeed()
+        {
+            return Speed_Current;
+        }
+        public float GetCurrentSpeedRatio()
+        {
+            return Speed_Current_Ratio;
+        }
         // Ideal Speed
-        float Speed_Ideal = 0.0f;
+        private float Speed_Ideal = 0.0f;
         
         // Update Position
         public void UpdatePosition(ref Quadcopter.States State, ref Quadcopter.Settings Settings)
         {
-            // Upwards of Quadcopter
-            Vector3 Quadcopter_Up = _Rigidbody.gameObject.transform.up.normalized;
-            // If close enough to be up, stay up
-            if (Vector3.Distance(Quadcopter_Up, Vector3.up) < 0.1f)
-                Quadcopter_Up = Vector3.up;
+            // Float Thruster amount
+            //float ThrusterAmount = State.GetThrusterUpwards();
+            float ThrusterAmount = State.GetThrusters();
+            // Inverse Setting
+            if (Settings._InverseThrusters)
+                ThrusterAmount = 1.0f - ThrusterAmount;
+
+            // Aim
+            Vector3 Aim = Quadcopter_Up;
 
             // Gravity
             Vector3 Gravity = new Vector3(0, Settings._Gravity * Settings._GravityModifier, 0);
 
+            // Rotor Speed Ideal
+            if(ThrusterAmount >= 0.0f)
+                Speed_Ideal = ThrusterAmount * Settings._ThrusterSpeedUpwards;
+            else
+                Speed_Ideal = ThrusterAmount * Settings._ThrusterSpeedDownwards;
 
-            // Calculated Speed
-            Speed_Ideal = State.GetThrusterUpwards() * Settings._ThrusterSpeed * ((Settings._InverseThrusters) ? -1.0f : 1.0f);
-
-            // Going upwards at all immediately combats Gravity
-            if (Speed_Ideal > 0.0f)
+            // If thrusters are being used
+            if (ThrusterAmount > 0.0f)
             {
-                Speed_Ideal += Mathf.Abs(Gravity.y);
+                // You move at least as the same speed as gravity
+                Speed_Current = Mathf.Max(Speed_Current, -Gravity.y * 0.88f);
             }
 
-            // Adjust Speed Based on going up or down
-            if (Speed < Speed_Ideal) // Going up
-                Speed = Mathf.Lerp(Speed, Speed_Ideal, Settings._ThrusterTransition_Upwards);
-            else // Going down
-                Speed = Mathf.Lerp(Speed, Speed_Ideal, Settings._ThrusterTransition_Downwards);
+            // Lerp Speed to Ideal
+            //
+            if(Speed_Current < Speed_Ideal)
+            {
+                // Going Up
+                Speed_Current = Mathf.Lerp(Speed_Current, Speed_Ideal, Settings._ThrusterTransition_Upwards);
+            }
+            else
+            {
+                // Going Down
+                Speed_Current = Mathf.Lerp(Speed_Current, Speed_Ideal, Settings._ThrusterTransition_Downwards);
+            }
 
-            Vector3 Direction = Quadcopter_Up * Speed + Gravity;
+            // Update Speed Ratio
+            if (ThrusterAmount > 0.0f)
+                Speed_Current_Ratio = (Speed_Current / Settings._ThrusterSpeedUpwards);
+            else
+                Speed_Current_Ratio = (Speed_Current / Settings._ThrusterSpeedDownwards);
 
 
-            // DEBUG
-            Debug.DrawLine(_Rigidbody.gameObject.transform.position, _Rigidbody.gameObject.transform.position + Direction, Color.white);
-            // End
-            _Rigidbody.velocity = Direction;
+            SetVelocity(Gravity + Aim * Speed_Current);
 
+            //  // Calculated Speed
+            //  Speed_Ideal = State.GetThrusterUpwards() * Settings._ThrusterSpeed * ((Settings._InverseThrusters) ? -1.0f : 1.0f);
             //  
-            //  // Update Ideal Speed
-            //  Speed_Ideal = State.GetThrusterSpeed() * Settings._ThrusterSpeed * ((Settings._InverseThrusters) ? -1.0f : 1.0f);
+            //  // Going upwards at all immediately combats Gravity
+            //  //if (Speed_Ideal > 0.0f)
+            //  //{
+            //  //    Speed_Ideal += Mathf.Abs(Gravity.y);
+            //  //}
             //  
-            //  // Update Speed Value
-            //  Speed = Mathf.Lerp(Speed, Speed_Ideal, Settings._ThrusterTransition);
-            //  
-            //  //Debug.Log(Speed);
-
-            //Speed_Ideal = State.GetThrusterSpeed() * Settings._ThrusterSpeed * ((Settings._InverseThrusters) ? -1.0f : 1.0f);
-            //Debug.Log(Speed_Ideal);
-
-            //  // Speed Targeted
-            //  Speed_Ideal = State.GetThrusterRatio() * Settings._ThrusterSpeed * ((Settings._InverseThrusters) ? -1.0f : 1.0f);
-            //  
-            //  // Current Speed
-            //  if(Speed < Speed_Ideal) // Going up
+            //  // Adjust Speed Based on going up or down
+            //  if (Speed < Speed_Ideal) // Going up
             //      Speed = Mathf.Lerp(Speed, Speed_Ideal, Settings._ThrusterTransition_Upwards);
             //  else // Going down
             //      Speed = Mathf.Lerp(Speed, Speed_Ideal, Settings._ThrusterTransition_Downwards);
             //  
+            //  Vector3 Direction = Quadcopter_Up * Speed + Gravity;
             //  
-            //  // Upwards
-            //  Vector3 Quadcopter_Up = _Rigidbody.gameObject.transform.up.normalized;
-            //  // If close enough to be up, stay up
-            //  if(Vector3.Distance(Quadcopter_Up, Vector3.up) < 0.1f)
-            //  {
-            //      Quadcopter_Up = Vector3.up;
-            //  }
             //  
-            //  Vector3 MovementDirection = Quadcopter_Up * Speed;
-            //  // Gravity
-            //  Vector3 Gravity = new Vector3(0, Settings._Gravity * Settings._GravityModifier, 0);
-            //  
-            //  // Speed = 1 -> max speed
-            //  // Speed = 0 -> grav
-            //  // Speed = -1 -> 
-            //  
-            //  // Final Direction
-            //  //Debug.Log(MovementDirection);
-            //  Vector3 FinalDirection = MovementDirection + Gravity;
-            //  
-            //  _Rigidbody.velocity = FinalDirection;
+            //  // DEBUG
+            //  Debug.DrawLine(_Rigidbody.gameObject.transform.position, _Rigidbody.gameObject.transform.position + Direction, Color.white);
+            //  // End
+            //  //_Rigidbody.velocity = Direction;
+
         }
 
 
@@ -344,13 +376,17 @@ namespace Quadcopter
         // Update Rotation Stuff (Returns Final Eulers)
         public void UpdateRotationEuler(ref Quadcopter.States State, ref Quadcopter.Settings Settings)
         {
+
             // Update Ideal Eulers
             Pitch_Change = State.GetEulerChanges().x * Settings._PitchSpeed * ((Settings._InversePitch) ? -1.0f : 1.0f);
             Yaw_Change = State.GetEulerChanges().y * Settings._YawSpeed * ((Settings._InverseYaw) ? -1.0f : 1.0f);
             Roll_change = State.GetEulerChanges().z * Settings._RollSpeed * ((Settings._InverseRoll) ? -1.0f : 1.0f);
 
-            // Update Eulers
-            _Rigidbody.gameObject.transform.eulerAngles += new Vector3(Pitch_Change, Yaw_Change, Roll_change);
+            // Update Rotations
+            _Rigidbody.gameObject.transform.RotateAround(Position, Quadcopter_Right, Pitch_Change);
+            _Rigidbody.gameObject.transform.RotateAround(Position, Quadcopter_Up, Yaw_Change);
+            _Rigidbody.gameObject.transform.RotateAround(Position, Quadcopter_Forward, Roll_change);
+
         }
     }
 
@@ -459,6 +495,8 @@ namespace Quadcopter
             if (!_Paused)
             {
                 // Update Physics
+                _Physics.UpdatePosition();
+                _Physics.UpdateAxis();
                 _Physics.UpdateRotationEuler(ref _States, ref _Settings);
                 _Physics.UpdatePosition(ref _States, ref _Settings);
             }

@@ -127,7 +127,7 @@ namespace Quadcopter
 
                 UpdateRotation();
 
-                _Rotation += 1.0f;
+                _Rotation += _Main._Physics.GetCurrentSpeedRatio() * 10.0f;
                 transform.localEulerAngles = new Vector3(0, _Rotation, 0);
             }
             else

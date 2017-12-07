@@ -589,9 +589,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Settings:
     _GravityModifier: 3.5
-    _ThrusterSpeed: 15
+    _ThrusterSpeedUpwards: 67
+    _ThrusterSpeedDownwards: 33
     _ThrusterTransition_Upwards: 0.5
-    _ThrusterTransition_Downwards: 0.1
+    _ThrusterTransition_Downwards: 0.03
     _InverseThrusters: 0
     _ThrusterControl: 2
     _PitchSpeed: 2
@@ -2696,11 +2697,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4468450768066916, guid: ae8c529962d57f344bab6e0ee609cfaf, type: 2}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4804309201985800, guid: ae8c529962d57f344bab6e0ee609cfaf, type: 2}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4223428908713412, guid: ae8c529962d57f344bab6e0ee609cfaf, type: 2}
       propertyPath: m_RootOrder
