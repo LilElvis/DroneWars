@@ -24,8 +24,6 @@ GameObject:
   - component: {fileID: 136649789190018520}
   - component: {fileID: 136708612714813912}
   - component: {fileID: 136566788924351824}
-  - component: {fileID: 136170643270181424}
-  - component: {fileID: 136213854570318644}
   m_Layer: 0
   m_Name: pTorus3
   m_TagString: Untagged
@@ -147,7 +145,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4169100981363530}
   m_Layer: 0
-  m_Name: Rings
+  m_Name: HalfRings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -510,7 +508,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1193961201629746}
-  m_Mesh: {fileID: 4300000, guid: 408803ac25e55eb44b95e1449780cc9e, type: 3}
+  m_Mesh: {fileID: 4300000, guid: cdd4c37a637fa2143bb8f49a526eaa4a, type: 3}
 --- !u!33 &33365647079767526
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -599,32 +597,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!136 &136170643270181424
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1193961201629746}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 1
-  m_Height: 10
-  m_Direction: 0
-  m_Center: {x: 0, y: 10, z: 0}
---- !u!136 &136213854570318644
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1193961201629746}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 1
-  m_Height: 10
-  m_Direction: 1
-  m_Center: {x: 0, y: 5, z: 0}
 --- !u!136 &136566788924351824
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -634,10 +606,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 1
+  m_Radius: 0.5
   m_Height: 10
   m_Direction: 0
-  m_Center: {x: 0, y: 20, z: 0}
+  m_Center: {x: 0, y: 6.5, z: 0}
 --- !u!136 &136649789190018520
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -647,10 +619,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 1
+  m_Radius: 0.5
   m_Height: 10
   m_Direction: 1
-  m_Center: {x: 5, y: 15, z: 0}
+  m_Center: {x: 5, y: 3, z: 0}
 --- !u!136 &136708612714813912
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -660,7 +632,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 1
+  m_Radius: 0.5
   m_Height: 10
   m_Direction: 1
-  m_Center: {x: -5, y: 15, z: 0}
+  m_Center: {x: -5, y: 3, z: 0}

@@ -60,59 +60,53 @@ namespace Quadcopter
             bool R1 = (_Type == RotorType.FRONT_LEFT) || (_Type == RotorType.BACK_RIGHT);
             bool R2 = (_Type == RotorType.FRONT_RIGHT) || (_Type == RotorType.BACK_LEFT);
 
-            //switch (_Main._States.GetVertical())
-            //{
-            //    case VerticalMovement.DEAD:
-            //        {
-            //            _RotationDirection = RotorRotationDirection.NULL;
-            //        }
-            //        break;
-            //
-            //    case VerticalMovement.STILL:
-            //        {
-            //            if (R1)
-            //                _RotationDirection = RotorRotationDirection.CLOCKWISE;
-            //            else if (R2)
-            //                _RotationDirection = RotorRotationDirection.COUNTER_CLOCKWISE;
-            //            else
-            //                _RotationDirection = RotorRotationDirection.NULL;
-            //        }
-            //        break;
-            //
-            //    case VerticalMovement.UPWARDS:
-            //        {
-            //            _RotationDirection = RotorRotationDirection.COUNTER_CLOCKWISE;
-            //        }
-            //        break;
-            //
-            //    case VerticalMovement.DOWNWARDS:
-            //        {
-            //            _RotationDirection = RotorRotationDirection.CLOCKWISE;
-            //        }
-            //        break;
-            //}
+            // Check vertical Speed
+            ThrusterState T = _Main._States.GetThrusterState();
+
+            if(T == ThrusterState.UPWARDS)
+            {
+                _RotationDirection = RotorRotationDirection.COUNTER_CLOCKWISE;
+            }
+            else if(T == ThrusterState.DOWNWARDS)
+            {
+                _RotationDirection = RotorRotationDirection.CLOCKWISE;
+            }
+            else if(T == ThrusterState.STILL)
+            {
+                if (R1)
+                    _RotationDirection = RotorRotationDirection.CLOCKWISE;
+                else if (R2)
+                    _RotationDirection = RotorRotationDirection.COUNTER_CLOCKWISE;
+                else
+                    _RotationDirection = RotorRotationDirection.NULL;
+            }
+            else
+            {
+                _RotationDirection = RotorRotationDirection.NULL;
+            }
+
         }
 
         private void UpdateRotation()
         {
             if (!_Main.CheckPause())
             {
-                // switch (_RotationDirection)
-                // {
-                //     case RotorRotationDirection.COUNTER_CLOCKWISE:
-                //         _Speed = Mathf.Lerp(_Speed, +_Settings._RotorRotationSpeed, _Settings._RotorRotationChangespeed);
-                //         break;
-                // 
-                //     case RotorRotationDirection.CLOCKWISE:
-                //         _Speed = Mathf.Lerp(_Speed, -_Settings._RotorRotationSpeed, _Settings._RotorRotationChangespeed);
-                //         break;
-                // 
-                //     case RotorRotationDirection.NULL:
-                //         _Speed = Mathf.Lerp(_Speed, 0.0f, _Settings._RotorRotationChangespeed);
-                //         break;
-                // }
-                // 
-                //_Rotation += _Speed;
+                switch (_RotationDirection)
+                {
+                    case RotorRotationDirection.COUNTER_CLOCKWISE:
+                        _Speed = Mathf.Lerp(_Speed, +_Settings._RotorSpeed_Aesthetic, _Settings._RotorSpeedTransition_Aesthetic);
+                        break;
+
+                    case RotorRotationDirection.CLOCKWISE:
+                        _Speed = Mathf.Lerp(_Speed, -_Settings._RotorSpeed_Aesthetic, _Settings._RotorSpeedTransition_Aesthetic);
+                        break;
+
+                    case RotorRotationDirection.NULL:
+                        _Speed = Mathf.Lerp(_Speed, 0.0f, _Settings._RotorSpeedTransition_Aesthetic);
+                        break;
+                }
+                 
+                _Rotation += _Speed;
                 // 
                 // _SpeedRatio = Mathf.Clamp01(Mathf.Abs(_Speed) / _Settings._RotorRotationSpeed);
             }
@@ -127,7 +121,7 @@ namespace Quadcopter
 
                 UpdateRotation();
 
-                _Rotation += _Main._Physics.GetCurrentSpeedRatio() * 10.0f;
+                //_Rotation += Mathf.Abs(_Main._Physics.GetCurrentSpeedRatio()) * 10.0f;
                 transform.localEulerAngles = new Vector3(0, _Rotation, 0);
             }
             else

@@ -59,5 +59,10 @@ namespace Quadcopter
         {
             return GamepadManager.GetKeyDown(PlayerIndex.One, GamepadButton.A);
         }
+
+        public static bool ResetLevel()
+        {
+            return GamepadManager.GetKeyDown(PlayerIndex.One, GamepadButton.Y);
+        }
     }
 }
