@@ -2457,6 +2457,11 @@ Prefab:
       propertyPath: m_Name
       value: QuadCopter
       objectReference: {fileID: 0}
+    - target: {fileID: 114783576089842746, guid: 34080caeedb1678488d700172efc1e3f,
+        type: 2}
+      propertyPath: _Settings._ThrusterTransition_Upwards
+      value: 0.3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 34080caeedb1678488d700172efc1e3f, type: 2}
   m_IsPrefabParent: 0

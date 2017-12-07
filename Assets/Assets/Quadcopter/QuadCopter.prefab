@@ -2243,10 +2243,10 @@ MonoBehaviour:
     _GravityModifier: 3.5
     _RotorSpeed_Aesthetic: 10
     _RotorSpeedTransition_Aesthetic: 0.1
-    _ThrusterRest: 1
+    _ThrusterRest: 0
     _ThrusterSpeedUpwards: 67
     _ThrusterSpeedDownwards: 33
-    _ThrusterTransition_Upwards: 0.5
+    _ThrusterTransition_Upwards: 0.3
     _ThrusterTransition_Downwards: 0.03
     _InverseThrusters: 0
     _ThrusterControl: 2

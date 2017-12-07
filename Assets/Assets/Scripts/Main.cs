@@ -415,7 +415,7 @@ namespace Quadcopter
             _Rigidbody.gameObject.transform.RotateAround(Position, Quadcopter_Forward, Roll_change);
 
             // If rest state, fix orientation if controls aren't being touced
-            if(Pitch_Change == 0.0f && Yaw_Change == 0.0f && Roll_change == 0.0f)
+            if(Pitch_Change == 0.0f && Yaw_Change == 0.0f && Roll_change == 0.0f && Settings._ThrusterRest)
             {
                 Vector3 Euler = _Rigidbody.gameObject.transform.eulerAngles;
 
