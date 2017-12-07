@@ -232,7 +232,7 @@ public class StaticVisionScript : MonoBehaviour
         if (timeSinceOffset > timeOffsetLength * 5.0f && Time.timeSinceLevelLoad > 5.0f)
         {
             float RandomOffsetChance = Random.Range(0.0f, 1000.0f);
-            if (RandomOffsetChance > 992.0f)
+            if (RandomOffsetChance > 996.0f)
             {
                 timeSinceOffset = 0.0f;
                 timeOffsetValue = new Vector2(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f));
