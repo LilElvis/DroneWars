@@ -13,6 +13,11 @@ namespace Quadcopter
         [Space]
         [Header("Global:")]
         public float _GravityModifier = 1.0f;
+        public float _RotorSpeed_Aesthetic = 10.0f;
+        [Range(0.0f, 1.0f)]
+        public float _RotorSpeedTransition_Aesthetic = 0.2f;
+
+        public bool _ThrusterRest = false;
 
         [Space]
         [Header("Thrusters:")]
@@ -202,8 +207,10 @@ namespace Quadcopter
                 thrusterState = ThrusterState.DOWNWARDS;
             else if (thrusters > 0.0f)
                 thrusterState = ThrusterState.UPWARDS;
-            else
+            else if (Settings._ThrusterRest)
                 thrusterState = ThrusterState.STILL;
+            else
+                thrusterState = ThrusterState.OFF;
 
             // Pitch
             float Pitch = QuadcopterControls.GetAnalog(Settings._PitchControl);
@@ -255,6 +262,10 @@ namespace Quadcopter
         {
             _Rigidbody.velocity = v;
         }
+        public Vector3 GetVelocity()
+        {
+            return _Rigidbody.velocity;
+        }
 
         // Position
         private Vector3 Position = Vector3.zero;
@@ -280,14 +291,9 @@ namespace Quadcopter
 
         // Speed
         private float Speed_Current = 0.0f;
-        private float Speed_Current_Ratio = 0.0f;
         public float GetCurrentSpeed()
         {
             return Speed_Current;
-        }
-        public float GetCurrentSpeedRatio()
-        {
-            return Speed_Current_Ratio;
         }
         // Ideal Speed
         private float Speed_Ideal = 0.0f;
@@ -301,9 +307,6 @@ namespace Quadcopter
             // Inverse Setting
             if (Settings._InverseThrusters)
                 ThrusterAmount = 1.0f - ThrusterAmount;
-
-            // Aim
-            Vector3 Aim = Quadcopter_Up;
 
             // Gravity
             Vector3 Gravity = new Vector3(0, Settings._Gravity * Settings._GravityModifier, 0);
@@ -321,27 +324,51 @@ namespace Quadcopter
                 Speed_Current = Mathf.Max(Speed_Current, -Gravity.y * 0.88f);
             }
 
-            // Lerp Speed to Ideal
-            //
-            if(Speed_Current < Speed_Ideal)
+
+
+            // Rest Stat
+            bool RestSate = (ThrusterAmount == 0.0f && Settings._ThrusterRest == true);
+
+            // Thruster rest
+            if (RestSate)
             {
-                // Going Up
-                Speed_Current = Mathf.Lerp(Speed_Current, Speed_Ideal, Settings._ThrusterTransition_Upwards);
+                // Lerp speed to rest
+                Speed_Current = Mathf.Lerp(Speed_Current, -Gravity.y, 0.07f);
+
+                // If close enough, snap to gravity speed
+                if (Mathf.Abs(Speed_Current + Gravity.y) < 0.01f)
+                    Speed_Current = -Gravity.y;
             }
+            // Normal Transition
             else
             {
-                // Going Down
-                Speed_Current = Mathf.Lerp(Speed_Current, Speed_Ideal, Settings._ThrusterTransition_Downwards);
+                // Lerp Speed to Ideal
+                if (Speed_Current < Speed_Ideal)
+                {
+                    // Going Up
+                    Speed_Current = Mathf.Lerp(Speed_Current, Speed_Ideal, Settings._ThrusterTransition_Upwards);
+                }
+                else
+                {
+                    // Going Down
+                    Speed_Current = Mathf.Lerp(Speed_Current, Speed_Ideal, Settings._ThrusterTransition_Downwards);
+                }
             }
 
-            // Update Speed Ratio
-            if (ThrusterAmount > 0.0f)
-                Speed_Current_Ratio = (Speed_Current / Settings._ThrusterSpeedUpwards);
-            else
-                Speed_Current_Ratio = (Speed_Current / Settings._ThrusterSpeedDownwards);
+
+            // Final Direction
+            Vector3 FinalDirection = Gravity + Quadcopter_Up * Speed_Current;
+            // If at rest, make sure y value clamps if close enough to zero
+            if (RestSate && Mathf.Abs(FinalDirection.y) < 0.01f)
+            {
+                FinalDirection.y = 0.0f;
+            }
+
+            
 
 
-            SetVelocity(Gravity + Aim * Speed_Current);
+            // Set Velocity
+            SetVelocity(FinalDirection);
 
             //  // Calculated Speed
             //  Speed_Ideal = State.GetThrusterUpwards() * Settings._ThrusterSpeed * ((Settings._InverseThrusters) ? -1.0f : 1.0f);
@@ -386,6 +413,19 @@ namespace Quadcopter
             _Rigidbody.gameObject.transform.RotateAround(Position, Quadcopter_Right, Pitch_Change);
             _Rigidbody.gameObject.transform.RotateAround(Position, Quadcopter_Up, Yaw_Change);
             _Rigidbody.gameObject.transform.RotateAround(Position, Quadcopter_Forward, Roll_change);
+
+            // If rest state, fix orientation if controls aren't being touced
+            if(Pitch_Change == 0.0f && Yaw_Change == 0.0f && Roll_change == 0.0f)
+            {
+                Vector3 Euler = _Rigidbody.gameObject.transform.eulerAngles;
+
+                float spd = 0.06f;
+                Euler.x = Mathfx.Clerp(Euler.x, 0.0f, spd);
+                //Euler.y = Mathfx.Clerp(Euler.y, 0.0f, spd);
+                Euler.z = Mathfx.Clerp(Euler.z, 0.0f, spd);
+
+                _Rigidbody.gameObject.transform.eulerAngles = Euler;
+            }
 
         }
     }
@@ -488,6 +528,13 @@ namespace Quadcopter
             if (QuadcopterControls.ResetOrientation())
                 transform.eulerAngles = Vector3.zero;
 
+            if(QuadcopterControls.ResetLevel())
+            {
+                transform.position = new Vector3(400, 60, 100);
+                transform.eulerAngles = Vector3.zero;
+            }
+
+            // Udate Controls
             GamepadManager.Update();
         }
         private void FixedUpdate()

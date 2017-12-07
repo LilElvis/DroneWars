@@ -481,8 +481,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 288142120}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 400, y: 6, z: 100}
-  m_LocalScale: {x: 7.1125765, y: 1.9805856, z: 7.112581}
+  m_LocalPosition: {x: 400, y: 10.2, z: 100}
+  m_LocalScale: {x: 15.964277, y: 4.445451, z: 15.964282}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 17
@@ -589,6 +589,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Settings:
     _GravityModifier: 3.5
+    _RotorSpeed_Aesthetic: 10
+    _RotorSpeedTransition_Aesthetic: 0.1
+    _ThrusterRest: 0
     _ThrusterSpeedUpwards: 67
     _ThrusterSpeedDownwards: 33
     _ThrusterTransition_Upwards: 0.5
@@ -2625,15 +2628,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4484548924162942, guid: ae8c529962d57f344bab6e0ee609cfaf, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 400.02
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 4484548924162942, guid: ae8c529962d57f344bab6e0ee609cfaf, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 59.1
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 4484548924162942, guid: ae8c529962d57f344bab6e0ee609cfaf, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 99.26
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 4484548924162942, guid: ae8c529962d57f344bab6e0ee609cfaf, type: 2}
       propertyPath: m_LocalRotation.x
@@ -2718,6 +2721,18 @@ Prefab:
     - target: {fileID: 4484548924162942, guid: ae8c529962d57f344bab6e0ee609cfaf, type: 2}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484548924162942, guid: ae8c529962d57f344bab6e0ee609cfaf, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484548924162942, guid: ae8c529962d57f344bab6e0ee609cfaf, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484548924162942, guid: ae8c529962d57f344bab6e0ee609cfaf, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114873578706826050, guid: ae8c529962d57f344bab6e0ee609cfaf, type: 2}
