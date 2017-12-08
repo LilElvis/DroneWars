@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33587157227171442}
   - component: {fileID: 135706622277379846}
   - component: {fileID: 23006653031735724}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 4835071579125284}
   - component: {fileID: 33880357346891156}
   - component: {fileID: 23131027109477436}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Fan 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 4927263321011142}
   - component: {fileID: 54824749630877314}
   - component: {fileID: 114783576089842746}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: QuadCopter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 4571190957156276}
   - component: {fileID: 33218081618996640}
   - component: {fileID: 23799642933600094}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Fan 1 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 4735834777608536}
   - component: {fileID: 33633710329142584}
   - component: {fileID: 23378924726557604}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Fan 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 4547951901762108}
   - component: {fileID: 33743144624355628}
   - component: {fileID: 23765817507046958}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Fan 1 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 4011462306250176}
   - component: {fileID: 33138748082401684}
   - component: {fileID: 23187048078789614}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Fan 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4299107363004244}
   - component: {fileID: 114547459607916244}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Rotor (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -157,7 +157,7 @@ GameObject:
   - component: {fileID: 4035483008977450}
   - component: {fileID: 33896818648595060}
   - component: {fileID: 23380797064251738}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Fan 1 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,7 +175,7 @@ GameObject:
   - component: {fileID: 33724636933675408}
   - component: {fileID: 65243938178063252}
   - component: {fileID: 23358945371917872}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Edge (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -192,7 +192,7 @@ GameObject:
   - component: {fileID: 4625661569800752}
   - component: {fileID: 33484171145950066}
   - component: {fileID: 23172521620032568}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Fan 1 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,7 +209,7 @@ GameObject:
   - component: {fileID: 4615152900113216}
   - component: {fileID: 33118062641932936}
   - component: {fileID: 23187825541173540}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Fan 1 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 4886372580139388}
   - component: {fileID: 33132326286962092}
   - component: {fileID: 23606589500926042}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Fan 1 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -242,7 +242,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4534752027771170}
   - component: {fileID: 114650751037489334}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Rotor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -259,7 +259,7 @@ GameObject:
   - component: {fileID: 4815104668820348}
   - component: {fileID: 33802171352630184}
   - component: {fileID: 23791936784500536}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Fan 1 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -276,7 +276,7 @@ GameObject:
   - component: {fileID: 4507248519001436}
   - component: {fileID: 33881472973879638}
   - component: {fileID: 23761926601378616}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Fan 1 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -294,7 +294,7 @@ GameObject:
   - component: {fileID: 33834639242239730}
   - component: {fileID: 135410371550475430}
   - component: {fileID: 23830544755550886}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -311,7 +311,7 @@ GameObject:
   - component: {fileID: 4759776146626844}
   - component: {fileID: 33156442437326160}
   - component: {fileID: 23567927455522606}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Fan 1 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -329,7 +329,7 @@ GameObject:
   - component: {fileID: 33195730643619070}
   - component: {fileID: 135311581460312778}
   - component: {fileID: 23424581565421856}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -347,7 +347,7 @@ GameObject:
   - component: {fileID: 33844070671352500}
   - component: {fileID: 65608614601635372}
   - component: {fileID: 23712053481661952}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Edge (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -365,7 +365,7 @@ GameObject:
   - component: {fileID: 33294200674776384}
   - component: {fileID: 65884084882517126}
   - component: {fileID: 23825890065375650}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Edge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -383,7 +383,7 @@ GameObject:
   - component: {fileID: 33329858017326984}
   - component: {fileID: 23317471391600816}
   - component: {fileID: 136329477288072958}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -399,7 +399,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4255264626412524}
   - component: {fileID: 114790150780082574}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Rotor (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -417,7 +417,7 @@ GameObject:
   - component: {fileID: 33805256262891592}
   - component: {fileID: 135565209645637362}
   - component: {fileID: 23617195414166390}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -434,7 +434,7 @@ GameObject:
   - component: {fileID: 4814686492576818}
   - component: {fileID: 33406377184706454}
   - component: {fileID: 23538006183021036}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Fan 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -452,7 +452,7 @@ GameObject:
   - component: {fileID: 33285207199502866}
   - component: {fileID: 65651561764003588}
   - component: {fileID: 23263700244154856}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: FlatLower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -469,7 +469,7 @@ GameObject:
   - component: {fileID: 4762625340591872}
   - component: {fileID: 33053263506044186}
   - component: {fileID: 23375971815049144}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Fan 1 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -486,7 +486,7 @@ GameObject:
   - component: {fileID: 4265323541991972}
   - component: {fileID: 33933825264719876}
   - component: {fileID: 23667832759079254}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Fan 1 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -503,7 +503,7 @@ GameObject:
   - component: {fileID: 4659243594452330}
   - component: {fileID: 33860508728326672}
   - component: {fileID: 23128037795076498}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Fan 1 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -521,7 +521,7 @@ GameObject:
   - component: {fileID: 33930146350870988}
   - component: {fileID: 65121160752555612}
   - component: {fileID: 23543731206512954}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Edge (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -541,7 +541,7 @@ GameObject:
   - component: {fileID: 81996869458332896}
   - component: {fileID: 114721456668963508}
   - component: {fileID: 114158042886473754}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -557,7 +557,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4241446810506978}
   - component: {fileID: 114328523138552326}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Rotor (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2120,8 +2120,8 @@ Rigidbody:
   m_GameObject: {fileID: 1094173355530724}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Drag: 1
+  m_AngularDrag: 1
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -2220,7 +2220,7 @@ MonoBehaviour:
     GlitchTexture: {fileID: 2800000, guid: 9836b695b2e96f847b8d624e0dc506d2, type: 3}
     FaceTexture: {fileID: 2800000, guid: 6ffca5bf713cbe84b8ff03ecb98998b4, type: 3}
     nightVisionAmount: 0
-    normalAmount: 0.04
+    normalAmount: 0.02
   jitterAmount: {x: 8, y: 8}
   jitterBias: 1
   filmGrainJitterActive: 1
