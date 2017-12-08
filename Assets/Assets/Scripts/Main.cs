@@ -11,7 +11,13 @@ namespace Quadcopter
         public readonly static float _Gravity = -9.81f;
 
         [Space]
+        [Header("Prefabs:")]
+        public GameObject _WindTrailPrefab = null;
+
+        [Space]
         [Header("Global:")]
+        [Range(0.001f, 10.0f)]
+        public float _GlobalSpeedModifier = 1.0f;
         public float _GravityModifier = 1.0f;
         public float _RotorSpeed_Aesthetic = 10.0f;
         [Range(0.0f, 1.0f)]
@@ -266,7 +272,7 @@ namespace Quadcopter
         {
             return _Rigidbody.velocity;
         }
-
+        
         // Position
         private Vector3 Position = Vector3.zero;
         public void UpdatePosition()
@@ -368,7 +374,7 @@ namespace Quadcopter
 
 
             // Set Velocity
-            SetVelocity(FinalDirection);
+            SetVelocity(FinalDirection * Settings._GlobalSpeedModifier);
 
             //  // Calculated Speed
             //  Speed_Ideal = State.GetThrusterUpwards() * Settings._ThrusterSpeed * ((Settings._InverseThrusters) ? -1.0f : 1.0f);
@@ -456,6 +462,14 @@ namespace Quadcopter
             _Paused = !_Paused;
         }
 
+        // Spawn Position
+        private Vector3 _SpawnPosition = Vector3.zero;
+
+        // Get Position
+        public Vector3 GetPosition()
+        {
+            return transform.position;
+        }
 
 
         // Rotors
@@ -503,9 +517,14 @@ namespace Quadcopter
             if (FailCheck())
                 return;
 
+            _SpawnPosition = transform.position;
+
             // Outputs
             Debug.Log("Total Rotors acquired: " + _Rotors.Amount());
-            
+
+            // Setup Wind
+            if(_Settings._WindTrailPrefab != null)
+                WindGlobal.GetInstance().Setup(this);
         }
 
         // Update is called once per frame
@@ -530,12 +549,16 @@ namespace Quadcopter
 
             if(QuadcopterControls.ResetLevel())
             {
-                transform.position = new Vector3(400, 60, 100);
+                transform.position = _SpawnPosition;
                 transform.eulerAngles = Vector3.zero;
             }
 
             // Udate Controls
             GamepadManager.Update();
+
+            // Update Wind
+            if (_Settings._WindTrailPrefab != null)
+                WindGlobal.GetInstance().ManualUpdate();
         }
         private void FixedUpdate()
         {
@@ -546,6 +569,10 @@ namespace Quadcopter
                 _Physics.UpdateAxis();
                 _Physics.UpdateRotationEuler(ref _States, ref _Settings);
                 _Physics.UpdatePosition(ref _States, ref _Settings);
+            }
+            else
+            {
+                _Physics.SetVelocity(Vector3.zero);
             }
         }
     }
