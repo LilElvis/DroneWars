@@ -9,13 +9,17 @@ public class TimerScript : MonoBehaviour
 	Text text;
     public float time = 0.0f;
     bool timeActive = false;
-	
-	// Use this for initialization
-	void Start () 
+
+    Color _timerColorOn = Color.green;
+    Color _timerColorPaused = Color.yellow;
+    Color _timerColorZero = Color.white;
+
+    // Use this for initialization
+    void Start () 
 	{
 		text = GetComponent<Text>();
-		
-	}
+        text.color = _timerColorZero;
+    }
 
     // Update is called once per frame
     void Update()
@@ -23,11 +27,13 @@ public class TimerScript : MonoBehaviour
         if(GamepadManager.GetKeyDown(PlayerIndex.One, GamepadButton.LEFTSHOULDER))
         {
             timeActive = true;
+            text.color = _timerColorOn;
         }
 
         if (GamepadManager.GetKeyDown(PlayerIndex.One, GamepadButton.RIGHTSHOULDER))
         {
             timeActive = false;
+            text.color = _timerColorPaused;
         }
 
         if(GamepadManager.GetKey(PlayerIndex.One, GamepadButton.RIGHTSHOULDER) &&
@@ -35,6 +41,7 @@ public class TimerScript : MonoBehaviour
         {
             time = 0.0f;
             //timeActive = false;
+            text.color = _timerColorZero;
         }
 
 

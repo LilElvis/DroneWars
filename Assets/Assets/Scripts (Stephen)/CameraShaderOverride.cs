@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraShaderOverride : MonoBehaviour {
-
+public class CameraShaderOverride : MonoBehaviour
+{
     public Shader shader;
     public Color color;
 
     public Gradient healthColor;
-    float health;
+    float health = 0.0f;
     Camera _camera;
 
     Vector2 cameraSkew = new Vector2(-0.01f, -0.01f);
@@ -41,11 +41,9 @@ public class CameraShaderOverride : MonoBehaviour {
         _camera.projectionMatrix = mat;
     }
 
-
-
-    void LateUpdate()
+    public void setHealth(float amt)
     {
-        
+        health = Mathf.Clamp01(amt);
     }
 
     // Update is called once per frame
@@ -55,7 +53,7 @@ public class CameraShaderOverride : MonoBehaviour {
             _camera.transform.position = _follow.transform.position;
 
 
-        health = Mathf.Repeat(Time.time, 1.0f);
+        //health = Mathf.Repeat(Time.time * 0.1f, 1.0f);
         Shader.SetGlobalColor("uColor", healthColor.Evaluate(health));
 
         _camera.Render();        
