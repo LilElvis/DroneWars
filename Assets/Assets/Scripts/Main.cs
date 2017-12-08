@@ -370,34 +370,19 @@ namespace Quadcopter
                 FinalDirection.y = 0.0f;
             }
 
-            
+            // Wind affects
+            if (WindGlobal.GetInstance() != null)
+            {
+                // Wind affect velocity
+                FinalDirection += (WindGlobal.GetInstance().GetWind());
+
+            }
 
 
             // Set Velocity
             SetVelocity(FinalDirection * Settings._GlobalSpeedModifier);
 
-            //  // Calculated Speed
-            //  Speed_Ideal = State.GetThrusterUpwards() * Settings._ThrusterSpeed * ((Settings._InverseThrusters) ? -1.0f : 1.0f);
-            //  
-            //  // Going upwards at all immediately combats Gravity
-            //  //if (Speed_Ideal > 0.0f)
-            //  //{
-            //  //    Speed_Ideal += Mathf.Abs(Gravity.y);
-            //  //}
-            //  
-            //  // Adjust Speed Based on going up or down
-            //  if (Speed < Speed_Ideal) // Going up
-            //      Speed = Mathf.Lerp(Speed, Speed_Ideal, Settings._ThrusterTransition_Upwards);
-            //  else // Going down
-            //      Speed = Mathf.Lerp(Speed, Speed_Ideal, Settings._ThrusterTransition_Downwards);
-            //  
-            //  Vector3 Direction = Quadcopter_Up * Speed + Gravity;
-            //  
-            //  
-            //  // DEBUG
-            //  Debug.DrawLine(_Rigidbody.gameObject.transform.position, _Rigidbody.gameObject.transform.position + Direction, Color.white);
-            //  // End
-            //  //_Rigidbody.velocity = Direction;
+
 
         }
 
@@ -409,6 +394,35 @@ namespace Quadcopter
         // Update Rotation Stuff (Returns Final Eulers)
         public void UpdateRotationEuler(ref Quadcopter.States State, ref Quadcopter.Settings Settings)
         {
+            // Check Wind Direction
+            if (WindGlobal.GetInstance() != null)
+            {
+
+                Vector3 WD = WindGlobal.GetInstance().GetWindDirection();
+                float WF = WindGlobal.GetInstance().GetWindStrength() * 0.1f;
+                WF = Mathf.Pow(WF, 1.5f);
+
+
+                if (WF != 0.0f)
+                {
+                    // If up is aiming perpendicular to wind, no effect
+                    float WindEffect = Mathf.Abs(Vector3.Dot(WD, Quadcopter_Up)) * WF;
+
+                    _Rigidbody.gameObject.transform.RotateAround(Position, Vector3.right, WD.y * WindEffect);
+                    _Rigidbody.gameObject.transform.RotateAround(Position, Vector3.up, WD.x * WindEffect);
+                    _Rigidbody.gameObject.transform.RotateAround(Position, Vector3.forward, WD.z * WindEffect);
+
+                    //Vector3 TargetForward = WD;
+                    //// Check if direction is closer to backwards
+                    //if (Vector3.Distance(Quadcopter_Forward, WD) > Vector3.Distance(Quadcopter_Forward, -WD))
+                    //{
+                    //    //TargetForward = -WD;
+                    //}
+                    //
+                    //// Slerp forward to target forward
+                    //_Rigidbody.gameObject.transform.up = Vector3.Slerp(Quadcopter_Up, TargetForward, 0.02f * WindEffect).normalized;
+                }
+            }
 
             // Update Ideal Eulers
             Pitch_Change = State.GetEulerChanges().x * Settings._PitchSpeed * ((Settings._InversePitch) ? -1.0f : 1.0f);
@@ -421,7 +435,7 @@ namespace Quadcopter
             _Rigidbody.gameObject.transform.RotateAround(Position, Quadcopter_Forward, Roll_change);
 
             // If rest state, fix orientation if controls aren't being touced
-            if(Pitch_Change == 0.0f && Yaw_Change == 0.0f && Roll_change == 0.0f && Settings._ThrusterRest)
+            if (Pitch_Change == 0.0f && Yaw_Change == 0.0f && Roll_change == 0.0f && Settings._ThrusterRest)
             {
                 Vector3 Euler = _Rigidbody.gameObject.transform.eulerAngles;
 
@@ -556,9 +570,6 @@ namespace Quadcopter
             // Udate Controls
             GamepadManager.Update();
 
-            // Update Wind
-            if (_Settings._WindTrailPrefab != null)
-                WindGlobal.GetInstance().ManualUpdate();
         }
         private void FixedUpdate()
         {
