@@ -543,12 +543,12 @@ Prefab:
     - target: {fileID: 198472335455853938, guid: 953a77d6c3ded354fb60273b5b1458ec,
         type: 2}
       propertyPath: NoiseModule.strength.scalar
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 198472335455853938, guid: 953a77d6c3ded354fb60273b5b1458ec,
         type: 2}
       propertyPath: randomSeed
-      value: -1267871436
+      value: -1265171342
       objectReference: {fileID: 0}
     - target: {fileID: 198472335455853938, guid: 953a77d6c3ded354fb60273b5b1458ec,
         type: 2}
@@ -863,7 +863,8 @@ Prefab:
         type: 2}
       propertyPath: _Settings._WindTrailPrefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1839569038617832, guid: 953a77d6c3ded354fb60273b5b1458ec,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 34080caeedb1678488d700172efc1e3f, type: 2}
   m_IsPrefabParent: 0

@@ -54,25 +54,25 @@ public class WindGlobal
             _WindStrength = 0.8f;
 
             // Spawn new ones
-            if (WindTrails.Count < MaxTrails)
-            {
-                if (Time.time > SpawnTime)
-                {
-                    Vector3 P = Q.GetPosition() + Random.insideUnitSphere * Random.Range(4.0f, 20.0f);
-
-                    float TimeAlive = Random.Range(2, 7);
-
-                    GameObject Trail = MonoBehaviour.Instantiate(Q._Settings._WindTrailPrefab);
-                    Trail.transform.position = P;
-
-                    Trail.GetComponent<WindTrail>().Deadtime = Time.time + TimeAlive;
-
-                    // Stall for next update
-                    SpawnTime = Time.time + SpawnTimeStall;
-
-                    WindTrails.Add(Trail);
-                }
-            }
+            //  if (WindTrails.Count < MaxTrails)
+            //  {
+            //      if (Time.time > SpawnTime)
+            //      {
+            //          Vector3 P = Q.GetPosition() + Random.insideUnitSphere * Random.Range(4.0f, 20.0f);
+            //  
+            //          float TimeAlive = Random.Range(2, 7);
+            //  
+            //          GameObject Trail = MonoBehaviour.Instantiate(Q._Settings._WindTrailPrefab);
+            //          Trail.transform.position = P;
+            //  
+            //          Trail.GetComponent<WindTrail>().Deadtime = Time.time + TimeAlive;
+            //  
+            //          // Stall for next update
+            //          SpawnTime = Time.time + SpawnTimeStall;
+            //  
+            //          WindTrails.Add(Trail);
+            //      }
+            //  }
 
         }
     }
