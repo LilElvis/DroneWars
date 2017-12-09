@@ -89,26 +89,42 @@ namespace Quadcopter
 
         private void UpdateRotation()
         {
-            if (!_Main.CheckPause())
+            // broken
+            if (_Main._Settings._Broken)
             {
-                switch (_RotationDirection)
-                {
-                    case RotorRotationDirection.COUNTER_CLOCKWISE:
-                        _Speed = Mathf.Lerp(_Speed, +_Settings._RotorSpeed_Aesthetic, _Settings._RotorSpeedTransition_Aesthetic);
-                        break;
+                _Speed = Mathf.Lerp(_Speed, 0.0f, 0.2f);
 
-                    case RotorRotationDirection.CLOCKWISE:
-                        _Speed = Mathf.Lerp(_Speed, -_Settings._RotorSpeed_Aesthetic, _Settings._RotorSpeedTransition_Aesthetic);
-                        break;
+                if (_Speed < 0.01f)
+                    _Speed = 0.0f;
 
-                    case RotorRotationDirection.NULL:
-                        _Speed = Mathf.Lerp(_Speed, 0.0f, _Settings._RotorSpeedTransition_Aesthetic);
-                        break;
-                }
-                 
                 _Rotation += _Speed;
-                // 
-                // _SpeedRatio = Mathf.Clamp01(Mathf.Abs(_Speed) / _Settings._RotorRotationSpeed);
+            }
+            // not broken
+            else
+            {
+
+
+                if (!_Main.CheckPause())
+                {
+                    switch (_RotationDirection)
+                    {
+                        case RotorRotationDirection.COUNTER_CLOCKWISE:
+                            _Speed = Mathf.Lerp(_Speed, +_Settings._RotorSpeed_Aesthetic, _Settings._RotorSpeedTransition_Aesthetic);
+                            break;
+
+                        case RotorRotationDirection.CLOCKWISE:
+                            _Speed = Mathf.Lerp(_Speed, -_Settings._RotorSpeed_Aesthetic, _Settings._RotorSpeedTransition_Aesthetic);
+                            break;
+
+                        case RotorRotationDirection.NULL:
+                            _Speed = Mathf.Lerp(_Speed, 0.0f, _Settings._RotorSpeedTransition_Aesthetic);
+                            break;
+                    }
+
+                    _Rotation += _Speed;
+                    // 
+                    // _SpeedRatio = Mathf.Clamp01(Mathf.Abs(_Speed) / _Settings._RotorRotationSpeed);
+                }
             }
         }
 

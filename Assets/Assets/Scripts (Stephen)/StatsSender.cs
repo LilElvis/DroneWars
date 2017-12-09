@@ -29,17 +29,23 @@ public class StatsSender : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate ()
     {
-        newPosition = transform.position;
-        velocity = newPosition - oldPosition;
-        velocityFloat = Vector3.Distance(newPosition, oldPosition) / Time.fixedDeltaTime;
+        if (stats != null)
+        {
 
-        stats.setWindSpeed(windGlobal._IdealWindStrength * 3.6f);    
-        if(velocityFloat < oldVelocityFloat + 5.0f &&
-            velocityFloat > oldVelocityFloat - 5.0f)
-            stats.setSpeed(velocityFloat);
+            newPosition = transform.position;
+            velocity = newPosition - oldPosition;
+            velocityFloat = Vector3.Distance(newPosition, oldPosition) / Time.fixedDeltaTime;
 
-        oldPosition = newPosition;
-        oldVelocityFloat = velocityFloat;
+            stats.setWindSpeed(windGlobal._IdealWindStrength * 3.6f);
 
+
+            if (velocityFloat < oldVelocityFloat + 5.0f &&
+                velocityFloat > oldVelocityFloat - 5.0f)
+                stats.setSpeed(velocityFloat);
+
+            oldPosition = newPosition;
+            oldVelocityFloat = velocityFloat;
+
+        }
     }
 }

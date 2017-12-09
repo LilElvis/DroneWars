@@ -2711,12 +2711,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Settings:
-    _WindTrailPrefab: {fileID: 0}
     _GlobalSpeedModifier: 1
     _GravityModifier: 3.5
     _RotorSpeed_Aesthetic: 10
     _RotorSpeedTransition_Aesthetic: 0.1
     _ThrusterRest: 0
+    _CameraPitchAngle: 10
+    _QuadcopterCamera: {fileID: 20141581217380662}
     _ThrusterSpeedUpwards: 67
     _ThrusterSpeedDownwards: 33
     _ThrusterTransition_Upwards: 0.3

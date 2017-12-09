@@ -10,9 +10,9 @@ namespace Quadcopter
 
         public readonly static float _Gravity = -9.81f;
 
-        [Space]
-        [Header("Prefabs:")]
-        public GameObject _WindTrailPrefab = null;
+        //[Space]
+        //[Header("Prefabs:")]
+        //public GameObject _WindTrailPrefab = null;
 
         [Space]
         [Header("Global:")]
@@ -22,8 +22,32 @@ namespace Quadcopter
         public float _RotorSpeed_Aesthetic = 10.0f;
         [Range(0.0f, 1.0f)]
         public float _RotorSpeedTransition_Aesthetic = 0.2f;
+        public bool _Broken = false;
 
+        [Header("Quadcopter Stays in place if possible")]
         public bool _ThrusterRest = false;
+
+        public Camera _QuadcopterCamera = null;
+        [Range(-90.0f, 90.0f)]
+        public float _CameraPitchAngle = 5.0f;
+        public void UpdateCameraPitch()
+        {
+            if(_QuadcopterCamera != null)
+            {
+                var E = _QuadcopterCamera.transform.eulerAngles;
+                E.x = _CameraPitchAngle;
+                _QuadcopterCamera.transform.eulerAngles = E;
+            }
+        }
+        [Range(90.0f, 170.0f)]
+        public float _CameraFOV = 100.0f;
+        public void UpdateFOV()
+        {
+            if(_QuadcopterCamera != null)
+            {
+                _QuadcopterCamera.fieldOfView = _CameraFOV;
+            }
+        }
 
         [Space]
         [Header("Thrusters:")]
@@ -272,10 +296,14 @@ namespace Quadcopter
         {
             return _Rigidbody.velocity;
         }
+        public void SetActive(bool state)
+        {
+            _Rigidbody.detectCollisions = state;
+        }
         
         // Position
         private Vector3 Position = Vector3.zero;
-        public void UpdatePosition()
+        public void UpdateRigidBodyPosition()
         {
             Position = _Rigidbody.transform.position;
         }
@@ -303,10 +331,16 @@ namespace Quadcopter
         }
         // Ideal Speed
         private float Speed_Ideal = 0.0f;
-        
+
         // Update Position
         public void UpdatePosition(ref Quadcopter.States State, ref Quadcopter.Settings Settings)
         {
+            // Gravity
+            Vector3 Gravity = new Vector3(0, Settings._Gravity * Settings._GravityModifier, 0);
+
+            // Final Direction
+            Vector3 FinalDirection = Gravity;
+
             // Float Thruster amount
             //float ThrusterAmount = State.GetThrusterUpwards();
             float ThrusterAmount = State.GetThrusters();
@@ -314,11 +348,12 @@ namespace Quadcopter
             if (Settings._InverseThrusters)
                 ThrusterAmount = 1.0f - ThrusterAmount;
 
-            // Gravity
-            Vector3 Gravity = new Vector3(0, Settings._Gravity * Settings._GravityModifier, 0);
+            // If broken, thrusters become zero
+            if (Settings._Broken)
+                ThrusterAmount = 0.0f;
 
             // Rotor Speed Ideal
-            if(ThrusterAmount >= 0.0f)
+            if (ThrusterAmount >= 0.0f)
                 Speed_Ideal = ThrusterAmount * Settings._ThrusterSpeedUpwards;
             else
                 Speed_Ideal = ThrusterAmount * Settings._ThrusterSpeedDownwards;
@@ -332,8 +367,8 @@ namespace Quadcopter
 
 
 
-            // Rest Stat
-            bool RestSate = (ThrusterAmount == 0.0f && Settings._ThrusterRest == true);
+            // Rest State if thruster is at zero and not broken
+            bool RestSate = (ThrusterAmount == 0.0f && Settings._ThrusterRest == true) && !Settings._Broken;
 
             // Thruster rest
             if (RestSate)
@@ -361,9 +396,8 @@ namespace Quadcopter
                 }
             }
 
-
             // Final Direction
-            Vector3 FinalDirection = Gravity + Quadcopter_Up * Speed_Current;
+            FinalDirection += Quadcopter_Up * Speed_Current;
             // If at rest, make sure y value clamps if close enough to zero
             if (RestSate && Mathf.Abs(FinalDirection.y) < 0.01f)
             {
@@ -378,10 +412,8 @@ namespace Quadcopter
 
             }
 
-
             // Set Velocity
             SetVelocity(FinalDirection * Settings._GlobalSpeedModifier);
-
 
 
         }
@@ -394,6 +426,7 @@ namespace Quadcopter
         // Update Rotation Stuff (Returns Final Eulers)
         public void UpdateRotationEuler(ref Quadcopter.States State, ref Quadcopter.Settings Settings)
         {
+ 
             // Check Wind Direction
             if (WindGlobal.GetInstance() != null)
             {
@@ -424,27 +457,33 @@ namespace Quadcopter
                 }
             }
 
-            // Update Ideal Eulers
-            Pitch_Change = State.GetEulerChanges().x * Settings._PitchSpeed * ((Settings._InversePitch) ? -1.0f : 1.0f);
-            Yaw_Change = State.GetEulerChanges().y * Settings._YawSpeed * ((Settings._InverseYaw) ? -1.0f : 1.0f);
-            Roll_change = State.GetEulerChanges().z * Settings._RollSpeed * ((Settings._InverseRoll) ? -1.0f : 1.0f);
-
-            // Update Rotations
-            _Rigidbody.gameObject.transform.RotateAround(Position, Quadcopter_Right, Pitch_Change);
-            _Rigidbody.gameObject.transform.RotateAround(Position, Quadcopter_Up, Yaw_Change);
-            _Rigidbody.gameObject.transform.RotateAround(Position, Quadcopter_Forward, Roll_change);
-
-            // If rest state, fix orientation if controls aren't being touced
-            if (Pitch_Change == 0.0f && Yaw_Change == 0.0f && Roll_change == 0.0f && Settings._ThrusterRest)
+            // Update movement rotation if not broken
+            if (!Settings._Broken)
             {
-                Vector3 Euler = _Rigidbody.gameObject.transform.eulerAngles;
 
-                float spd = 0.06f;
-                Euler.x = Mathfx.Clerp(Euler.x, 0.0f, spd);
-                //Euler.y = Mathfx.Clerp(Euler.y, 0.0f, spd);
-                Euler.z = Mathfx.Clerp(Euler.z, 0.0f, spd);
 
-                _Rigidbody.gameObject.transform.eulerAngles = Euler;
+                // Update Ideal Eulers
+                Pitch_Change = State.GetEulerChanges().x * Settings._PitchSpeed * ((Settings._InversePitch) ? -1.0f : 1.0f);
+                Yaw_Change = State.GetEulerChanges().y * Settings._YawSpeed * ((Settings._InverseYaw) ? -1.0f : 1.0f);
+                Roll_change = State.GetEulerChanges().z * Settings._RollSpeed * ((Settings._InverseRoll) ? -1.0f : 1.0f);
+
+                // Update Rotations
+                _Rigidbody.gameObject.transform.RotateAround(Position, Quadcopter_Right, Pitch_Change);
+                _Rigidbody.gameObject.transform.RotateAround(Position, Quadcopter_Up, Yaw_Change);
+                _Rigidbody.gameObject.transform.RotateAround(Position, Quadcopter_Forward, Roll_change);
+
+                // If rest state, fix orientation if controls aren't being touced
+                if (Pitch_Change == 0.0f && Yaw_Change == 0.0f && Roll_change == 0.0f && Settings._ThrusterRest)
+                {
+                    Vector3 Euler = _Rigidbody.gameObject.transform.eulerAngles;
+
+                    float spd = 0.06f;
+                    Euler.x = Mathfx.Clerp(Euler.x, 0.0f, spd);
+                    //Euler.y = Mathfx.Clerp(Euler.y, 0.0f, spd);
+                    Euler.z = Mathfx.Clerp(Euler.z, 0.0f, spd);
+
+                    _Rigidbody.gameObject.transform.eulerAngles = Euler;
+                }
             }
 
         }
@@ -514,6 +553,11 @@ namespace Quadcopter
                 Debug.LogError("Missing Rigidbody");
                 return true;
             }
+            if(!_Settings._QuadcopterCamera)
+            {
+                Debug.LogError("Missing Quadcopter Camera Reference");
+                return true;
+            }
 
             return false;
         }
@@ -535,14 +579,19 @@ namespace Quadcopter
             if (FailCheck())
                 return;
 
+            // Set Spawn
             _SpawnPosition = transform.position;
+
+            // Set Camera Pitch Angle
+            _Settings.UpdateCameraPitch();
+            // Set Camera FOV
+            _Settings.UpdateFOV();
 
             // Outputs
             Debug.Log("Total Rotors acquired: " + _Rotors.Amount());
 
             // Setup Wind
-            if(_Settings._WindTrailPrefab != null)
-                WindGlobal.GetInstance().Setup(this);
+            WindGlobal.GetInstance().Setup(this);
         }
 
         float timeSinceLastCrash = 0.0f;
@@ -598,14 +647,16 @@ namespace Quadcopter
             if (!_Paused)
             {
                 // Update Physics
-                _Physics.UpdatePosition();
+                _Physics.UpdateRigidBodyPosition();
                 _Physics.UpdateAxis();
                 _Physics.UpdateRotationEuler(ref _States, ref _Settings);
                 _Physics.UpdatePosition(ref _States, ref _Settings);
+                _Physics.SetActive(true);
             }
             else
             {
                 _Physics.SetVelocity(Vector3.zero);
+                _Physics.SetActive(false);
             }
         }
     }
