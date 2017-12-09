@@ -658,7 +658,6 @@ namespace Quadcopter
                 if(cameraOverride != null)
                 {
                     cameraOverride.setHealth(0.0f);
-                    cameraOverride.setHealth(0.0f);
 
                 }
 
