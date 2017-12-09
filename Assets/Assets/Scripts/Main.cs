@@ -620,6 +620,9 @@ namespace Quadcopter
 
                 
                 cameraOverride.addHealth(velocity * 0.025f);
+
+                if (cameraOverride.getHealth() >= 1.0f)
+                    _Settings._Broken = true;
             }
         }
 
@@ -651,8 +654,16 @@ namespace Quadcopter
             {
                 transform.position = _SpawnPosition;
                 transform.eulerAngles = Vector3.zero;
+
                 if(cameraOverride != null)
+                {
                     cameraOverride.setHealth(0.0f);
+                    cameraOverride.setHealth(0.0f);
+
+                }
+
+                _Settings._Broken = false;
+
             }
 
             // Udate Controls
