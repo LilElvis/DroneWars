@@ -26,23 +26,29 @@ public class TimerScript : MonoBehaviour
     {
         if(GamepadManager.GetKeyDown(PlayerIndex.One, GamepadButton.LEFTSHOULDER))
         {
-            timeActive = true;
-            text.color = _timerColorOn;
+            timeActive = !timeActive;
+
+            if(timeActive)
+                text.color = _timerColorOn;
+            else
+                text.color = _timerColorPaused;
         }
 
         if (GamepadManager.GetKeyDown(PlayerIndex.One, GamepadButton.RIGHTSHOULDER))
         {
             timeActive = false;
-            text.color = _timerColorPaused;
+            time = 0.0f;
+            text.color = _timerColorZero;
+            
         }
 
-        if(GamepadManager.GetKey(PlayerIndex.One, GamepadButton.RIGHTSHOULDER) &&
-            GamepadManager.GetKey(PlayerIndex.One, GamepadButton.LEFTSHOULDER))
-        {
-            time = 0.0f;
-            //timeActive = false;
-            text.color = _timerColorZero;
-        }
+        //if(GamepadManager.GetKey(PlayerIndex.One, GamepadButton.RIGHTSHOULDER) &&
+        //    GamepadManager.GetKey(PlayerIndex.One, GamepadButton.LEFTSHOULDER))
+        //{
+        //    time = 0.0f;
+        //    //timeActive = false;
+        //    text.color = _timerColorZero;
+        //}
 
 
         if (timeActive)

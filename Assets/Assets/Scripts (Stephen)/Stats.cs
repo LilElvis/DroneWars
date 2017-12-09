@@ -65,9 +65,9 @@ public class Stats : MonoBehaviour
     // Update is called once per frame
     void Update ()
     {
-        windSpeed += Random.Range(-0.1f, 0.11f);
+        //windSpeed += Random.Range(-0.1f, 0.11f);
 
-        setSpeed(Random.Range(0.0f, 1.0f) + Time.time * 0.1f);
+        //setSpeed(Random.Range(0.0f, 1.0f) + Time.time * 0.1f);
 
         text.text =
             collisionNum + " \n\n" +

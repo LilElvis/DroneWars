@@ -46,6 +46,16 @@ public class CameraShaderOverride : MonoBehaviour
         health = Mathf.Clamp01(amt);
     }
 
+    public float getHealth()
+    {
+        return health;
+    }
+
+    public void addHealth(float amt)
+    {
+        health = Mathf.Clamp01(health+amt);
+    }
+
     // Update is called once per frame
     void Update ()
     {

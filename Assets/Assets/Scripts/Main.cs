@@ -518,9 +518,13 @@ namespace Quadcopter
             return false;
         }
 
+        CameraShaderOverride cameraOverride;
+
         // Use this for initialization
         void Start()
         {
+            cameraOverride = FindObjectOfType<CameraShaderOverride>();
+
             // Get all used rotors
             _RotorSetup = _Rotors.Setup(this);
 
@@ -541,9 +545,26 @@ namespace Quadcopter
                 WindGlobal.GetInstance().Setup(this);
         }
 
+        float timeSinceLastCrash = 0.0f;
+        private void OnCollisionEnter(Collision collision)
+        {
+            float velocity = GetComponent<StatsSender>().GetVelocity();
+            if (velocity > 20.0f && timeSinceLastCrash > 3.0f)
+            {
+                FindObjectOfType<Stats>().addCollision(); timeSinceLastCrash = 0.0f;
+
+                
+                cameraOverride.addHealth(velocity * 0.025f);
+            }
+        }
+
+
+
         // Update is called once per frame
         void Update()
         {
+            timeSinceLastCrash += Time.deltaTime;
+
             // Fail Check
             if (FailCheck())
                 return;
@@ -565,6 +586,7 @@ namespace Quadcopter
             {
                 transform.position = _SpawnPosition;
                 transform.eulerAngles = Vector3.zero;
+                cameraOverride.setHealth(0.0f);
             }
 
             // Udate Controls
