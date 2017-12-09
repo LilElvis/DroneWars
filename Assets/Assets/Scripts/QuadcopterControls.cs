@@ -64,5 +64,60 @@ namespace Quadcopter
         {
             return GamepadManager.GetKeyDown(PlayerIndex.One, GamepadButton.Y);
         }
+
+        public static bool MenuUp()
+        {
+            if (
+                GamepadManager.GetKeyDown(PlayerIndex.One, GamepadDpadButton.UP) ||
+                GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y > +ANALOG_DEADZONE ||
+                GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y > +ANALOG_DEADZONE
+                )
+                return true;
+
+            return false;
+        }
+        public static bool MenuDown()
+        {
+            if (
+                GamepadManager.GetKeyDown(PlayerIndex.One, GamepadDpadButton.DOWN) ||
+                GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y < -ANALOG_DEADZONE ||
+                GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y < -ANALOG_DEADZONE
+                )
+                return true;
+
+            return false;
+        }
+
+        public static bool MenuLeft()
+        {
+            if (
+                GamepadManager.GetKeyDown(PlayerIndex.One, GamepadDpadButton.LEFT) ||
+                GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X < -ANALOG_DEADZONE ||
+                GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.X < -ANALOG_DEADZONE
+                )
+                return true;
+
+            return false;
+        }
+        public static bool MenuRight()
+        {
+            if (
+                GamepadManager.GetKeyDown(PlayerIndex.One, GamepadDpadButton.RIGHT) ||
+                GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X > +ANALOG_DEADZONE ||
+                GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.X > +ANALOG_DEADZONE
+                )
+                return true;
+
+            return false;
+        }
+
+        public static bool PausePreviousPage()
+        {
+            return GamepadManager.GetKeyDown(PlayerIndex.One, GamepadButton.LEFTSHOULDER);
+        }
+        public static bool PauseNextPage()
+        {
+            return GamepadManager.GetKeyDown(PlayerIndex.One, GamepadButton.RIGHTSHOULDER);
+        }
     }
 }

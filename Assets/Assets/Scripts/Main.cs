@@ -16,7 +16,7 @@ namespace Quadcopter
 
         [Space]
         [Header("Global:")]
-        [Range(0.001f, 10.0f)]
+        [Range(0.0f, 10.0f)]
         public float _GlobalSpeedModifier = 1.0f;
         public float _GravityModifier = 1.0f;
         public float _RotorSpeed_Aesthetic = 10.0f;
@@ -34,9 +34,9 @@ namespace Quadcopter
         {
             if(_QuadcopterCamera != null)
             {
-                var E = _QuadcopterCamera.transform.eulerAngles;
+                var E = _QuadcopterCamera.transform.localEulerAngles;
                 E.x = _CameraPitchAngle;
-                _QuadcopterCamera.transform.eulerAngles = E;
+                _QuadcopterCamera.transform.localEulerAngles = E;
             }
         }
         [Range(90.0f, 170.0f)]
@@ -52,6 +52,7 @@ namespace Quadcopter
         [Space]
         [Header("Thrusters:")]
         //[Range(0.0001f, 90.0f)]
+        public float _ThrusterSpeed = 1.0f;
         public float _ThrusterSpeedUpwards = 1.0f;
         public float _ThrusterSpeedDownwards = 1.0f;
         [Range(0.0f, 1.0f)]
@@ -346,26 +347,30 @@ namespace Quadcopter
             float ThrusterAmount = State.GetThrusters();
             // Inverse Setting
             if (Settings._InverseThrusters)
-                ThrusterAmount = 1.0f - ThrusterAmount;
+                ThrusterAmount = ThrusterAmount * -1.0f;
 
-            // If broken, thrusters become zero
+            // If broken, values are set to zero
             if (Settings._Broken)
-                ThrusterAmount = 0.0f;
-
-            // Rotor Speed Ideal
-            if (ThrusterAmount >= 0.0f)
-                Speed_Ideal = ThrusterAmount * Settings._ThrusterSpeedUpwards;
-            else
-                Speed_Ideal = ThrusterAmount * Settings._ThrusterSpeedDownwards;
-
-            // If thrusters are being used
-            if (ThrusterAmount > 0.0f)
             {
-                // You move at least as the same speed as gravity
-                Speed_Current = Mathf.Max(Speed_Current, -Gravity.y * 0.88f);
+                ThrusterAmount = 0.0f;
+                Speed_Ideal = 0.0f;
             }
+            // Normal thruster checks
+            else
+            {
+                // Rotor Speed Ideal
+                if (ThrusterAmount >= 0.0f)
+                    Speed_Ideal = ThrusterAmount * Settings._ThrusterSpeedUpwards * Settings._ThrusterSpeed;
+                else
+                    Speed_Ideal = ThrusterAmount * Settings._ThrusterSpeedDownwards * Settings._ThrusterSpeed;
 
-
+                // If thrusters are being used
+                if (ThrusterAmount > 0.0f)
+                {
+                    // You move at least as the same speed as gravity
+                    Speed_Current = Mathf.Max(Speed_Current, -Gravity.y * 0.88f);
+                }
+            }
 
             // Rest State if thruster is at zero and not broken
             bool RestSate = (ThrusterAmount == 0.0f && Settings._ThrusterRest == true) && !Settings._Broken;
@@ -562,11 +567,17 @@ namespace Quadcopter
             return false;
         }
 
-        CameraShaderOverride cameraOverride;
+        private CameraShaderOverride cameraOverride;
+
+        public GameObject _PauseObject = null;
+        private PauseMenu _PauseMenu = null;
 
         // Use this for initialization
         void Start()
         {
+            if(_PauseObject != null)
+                _PauseMenu = _PauseObject.GetComponent<PauseMenu>();
+
             cameraOverride = FindObjectOfType<CameraShaderOverride>();
 
             // Get all used rotors
@@ -592,6 +603,11 @@ namespace Quadcopter
 
             // Setup Wind
             WindGlobal.GetInstance().Setup(this);
+
+            // Setup Pause
+            if(_PauseMenu != null)
+                _PauseMenu.Setup(this);
+
         }
 
         float timeSinceLastCrash = 0.0f;
@@ -635,13 +651,15 @@ namespace Quadcopter
             {
                 transform.position = _SpawnPosition;
                 transform.eulerAngles = Vector3.zero;
-                cameraOverride.setHealth(0.0f);
+                if(cameraOverride != null)
+                    cameraOverride.setHealth(0.0f);
             }
 
             // Udate Controls
             GamepadManager.Update();
 
         }
+
         private void FixedUpdate()
         {
             if (!_Paused)
@@ -652,11 +670,19 @@ namespace Quadcopter
                 _Physics.UpdateRotationEuler(ref _States, ref _Settings);
                 _Physics.UpdatePosition(ref _States, ref _Settings);
                 _Physics.SetActive(true);
+
+                // Disable Pause Menu
+                if (_PauseMenu != null)
+                    _PauseMenu.gameObject.SetActive(false);
             }
             else
             {
                 _Physics.SetVelocity(Vector3.zero);
                 _Physics.SetActive(false);
+
+                // Enalbe Pause Menu
+                if (_PauseMenu != null)
+                    _PauseMenu.gameObject.SetActive(true);
             }
         }
     }

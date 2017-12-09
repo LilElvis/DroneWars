@@ -121,7 +121,7 @@ namespace Quadcopter
                             break;
                     }
 
-                    _Rotation += _Speed;
+                    _Rotation += (_Speed * _Main._Settings._GlobalSpeedModifier);
                     // 
                     // _SpeedRatio = Mathf.Clamp01(Mathf.Abs(_Speed) / _Settings._RotorRotationSpeed);
                 }
