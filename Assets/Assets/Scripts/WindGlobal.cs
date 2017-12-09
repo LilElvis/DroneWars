@@ -14,6 +14,8 @@ public enum WindControl
 
 public class WindGlobal : MonoBehaviour
 {
+    public static readonly int WindControlTotal = 6;
+
     private ParticleSystem _ParticleSystem = null;
 
     private Quadcopter.Main Q = null;

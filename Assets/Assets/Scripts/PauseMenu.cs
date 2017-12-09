@@ -136,6 +136,17 @@ public class PauseMenu : MonoBehaviour
                             break;
 
                         case 2:
+                            if(Left)
+                                WindGlobal.GetInstance()._Control -= 1;
+                            if (Right)
+                                WindGlobal.GetInstance()._Control += 1;
+
+                            // Clamp
+                            if ((int)WindGlobal.GetInstance()._Control >= WindGlobal.WindControlTotal)
+                                WindGlobal.GetInstance()._Control = WindControl.NONE;
+                            if ((int)WindGlobal.GetInstance()._Control < 0)
+                                WindGlobal.GetInstance()._Control = WindControl.CONSISTENT_CALM;
+
                             break;
 
                         case 3:

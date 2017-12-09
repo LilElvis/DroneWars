@@ -68,9 +68,9 @@ namespace Quadcopter
         public static bool MenuUp()
         {
             if (
-                GamepadManager.GetKeyDown(PlayerIndex.One, GamepadDpadButton.UP) ||
-                GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y > +ANALOG_DEADZONE ||
-                GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y > +ANALOG_DEADZONE
+                GamepadManager.GetKeyDown(PlayerIndex.One, GamepadDpadButton.UP)// ||
+               //GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y > +ANALOG_DEADZONE ||
+               //GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y > +ANALOG_DEADZONE
                 )
                 return true;
 
@@ -79,9 +79,9 @@ namespace Quadcopter
         public static bool MenuDown()
         {
             if (
-                GamepadManager.GetKeyDown(PlayerIndex.One, GamepadDpadButton.DOWN) ||
-                GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y < -ANALOG_DEADZONE ||
-                GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y < -ANALOG_DEADZONE
+                GamepadManager.GetKeyDown(PlayerIndex.One, GamepadDpadButton.DOWN) //||
+               //GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y < -ANALOG_DEADZONE ||
+               //GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y < -ANALOG_DEADZONE
                 )
                 return true;
 
